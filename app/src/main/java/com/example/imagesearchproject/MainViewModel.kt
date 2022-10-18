@@ -9,6 +9,6 @@ class MainViewModel(): ViewModel() {
     }*/
 
     fun onAddClick() {
-        //TODO fabAdd시 항목 추가할 intent 실행
+        //TODO ("fabAdd시 항목 추가할 intent 실행")
     }
 }

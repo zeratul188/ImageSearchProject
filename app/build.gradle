@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -52,13 +54,9 @@ dependencies {
     //implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
     //Room
-    def room_version = "2.4.3"
+    def room_version = "2.4.2"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
-    // To use Kotlin annotation processing tool (kapt)
-    kapt "androidx.room:room-compiler:$room_version"
-    // To use Kotlin Symbol Processing (KSP)
-    ksp "androidx.room:room-compiler:$room_version"
     // optional - RxJava2 support for Room
     implementation "androidx.room:room-rxjava2:$room_version"
     // optional - RxJava3 support for Room
@@ -68,5 +66,14 @@ dependencies {
     // optional - Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
     // optional - Paging 3 Integration
-    implementation "androidx.room:room-paging:2.5.0-alpha03"
+    implementation "androidx.room:room-paging:2.5.0-alpha01"
+
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    //Rxjava, RxKotlin, RxAndroid, RxBinding
+    implementation "io.reactivex.rxjava3:rxjava:3.1.5"
+    implementation("io.reactivex.rxjava3:rxkotlin:3.0.1")
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation 'com.jakewharton.rxbinding4:rxbinding:4.0.0'
 }
