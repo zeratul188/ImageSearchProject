@@ -10,7 +10,7 @@ interface ImageDao {
     @Query("SELECT * FROM imageitem")
     fun getAll(): List<ImageItem>
 
-    @Query("SELECT * FROM imageitem WHERE title LIKE ':title'")
+    @Query("SELECT * FROM imageitem WHERE title LIKE :title")
     fun findByTitle(title: String): ImageItem
 
     @Insert

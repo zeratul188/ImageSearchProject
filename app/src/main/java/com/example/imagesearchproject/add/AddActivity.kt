@@ -10,13 +10,16 @@ import com.example.imagesearchproject.R
 import com.example.imagesearchproject.databinding.ActivityAddBinding
 
 class AddActivity : AppCompatActivity() {
-    private val viewModel: AddViewModel by viewModels()
+    private val viewModel: AddViewModel by viewModels() {
+        AddViewModelFactory(this)
+    }
     private lateinit var binding: ActivityAddBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_add)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_add)
+        binding.addViewModel = viewModel
 
         with(binding) {
             edtTitle.addTextChangedListener(object : TextWatcher{

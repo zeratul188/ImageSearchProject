@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.example.imagesearchproject.databinding.ActivityMainBinding
 import com.example.imagesearchproject.room.ImageDatabase
 import com.example.imagesearchproject.room.ImageItem
@@ -11,7 +12,6 @@ import com.example.imagesearchproject.room.ImageItem
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
-    private val db = ImageDatabase.getInstance(this)
 
     private val items = ArrayList<ImageItem>()
 
@@ -20,6 +20,8 @@ class MainActivity : AppCompatActivity() {
         //setContentView(R.layout.activity_main)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.mainViewModel = viewModel
+        val db = ImageDatabase.getInstance(this)
 
         with(binding) {
             val imageAdapter = ImageRecyclerAdapter(items)
@@ -27,11 +29,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         /*val dataObserver = Observer<String> { data ->
-            binding.txtContent.text = data
+            binding.edtSearch.hint = data
         }
-        viewModel.data.observe(this, dataObserver)
+        viewModel.data.observe(this, dataObserver)*/
 
-        binding.btnInsert.setOnClickListener {
+        /*binding.fabAdd.setOnClickListener {
             viewModel.data.value = binding.edtContent.text.toString()
         }*/
 
