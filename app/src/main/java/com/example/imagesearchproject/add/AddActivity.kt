@@ -22,6 +22,7 @@ class AddActivity : AppCompatActivity() {
         binding.addViewModel = viewModel
 
         with(binding) {
+            viewModel.item.value?.follow = 0
             edtTitle.addTextChangedListener(object : TextWatcher{
                 override fun beforeTextChanged(
                     s: CharSequence?,

@@ -19,6 +19,10 @@ class ImageRecyclerAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
         holder.apply {
+            /*val layoutParams = itemView.layoutParams
+            layoutParams.height = 30
+            layoutParams.width = 30
+            itemView.requestLayout()*/
             bind(item)
             itemView.tag = item
         }
@@ -30,8 +34,7 @@ class ImageRecyclerAdapter(
 
         fun bind(item: ImageItem) {
             with(binding) {
-                txtTitle.text = item.title
-                txtContent.text = item.content
+                imageitem = item
                 executePendingBindings()
             }
         }

@@ -12,17 +12,21 @@ class AddViewModel(
     private val activity: AddActivity
 ): ViewModel() {
     val item: MutableLiveData<ImageItem> by lazy {
-        MutableLiveData<ImageItem>()
+        MutableLiveData<ImageItem>(ImageItem(0, "", "", "", 0))
     }
 
     fun onAddClick() {
         val db = ImageDatabase.getInstance(App.context())
         item.value?.let { item ->
-            db?.imageDao()?.insertAll(item)
             val toast = CustomToast(App.context())
             toast.createToast("아이템을 추가하였습니다.", false)
             toast.show()
+            val runnable = Runnable {
+                db?.imageDao()?.insertAll(item)
+                activity.finish()
+            }
+            val thread = Thread(runnable)
+            thread.start()
         }
-        activity.finish()
     }
 }

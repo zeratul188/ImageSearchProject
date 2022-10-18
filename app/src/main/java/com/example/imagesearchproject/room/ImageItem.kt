@@ -9,5 +9,6 @@ data class ImageItem(
     @PrimaryKey(autoGenerate = true) val uid: Int,
     @ColumnInfo(name = "title") var title: String?,
     @ColumnInfo(name = "content") var content: String?,
-    @ColumnInfo(name = "url") var url: String?
+    @ColumnInfo(name = "url") var url: String?,
+    @ColumnInfo(name = "follow") var follow: Int?
 )
