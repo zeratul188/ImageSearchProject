@@ -1,10 +1,19 @@
 package com.example.imagesearchproject
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imagesearchproject.databinding.ItemImagesBinding
+import com.example.imagesearchproject.room.ImageDatabase
 import com.example.imagesearchproject.room.ImageItem
+import kotlinx.coroutines.*
+import java.io.BufferedInputStream
+import java.lang.Runnable
+import java.net.MalformedURLException
+import java.net.URL
 
 class ImageRecyclerAdapter(
     private val items: ArrayList<ImageItem>
@@ -35,8 +44,47 @@ class ImageRecyclerAdapter(
         fun bind(item: ImageItem) {
             with(binding) {
                 imageitem = item
+                val imageScope = CoroutineScope(Dispatchers.IO)
+                imageScope.launch {
+                    try {
+                        imgView.setImageBitmap(convertedURLtoBitmap(item.url))
+                    } catch (e: MalformedURLException) {
+
+                    } catch (e: Exception) {
+                        Log.d("ImageError", "Error msg : $e")
+                    }
+                    imageScope.cancel()
+                }
+                layoutFollow.setOnClickListener {
+                    val runable = Runnable {
+                        try {
+                            item.follow = item.follow?.plus(1)
+                            val db = ImageDatabase.getInstance(App.context())
+                            val dao = db?.imageDao()
+                            dao?.update(item)
+                            imageitem = item
+                            executePendingBindings()
+                        } catch (e: Exception) {
+                            Log.d("error", "Error - $e")
+                        }
+                    }
+
+                    val thread = Thread(runable)
+                    thread.start()
+                }
                 executePendingBindings()
             }
+        }
+
+        private fun convertedURLtoBitmap(imageURL: String?): Bitmap {
+            val url = URL(imageURL)
+            val conn = url.openConnection()
+            conn.connect()
+            val size = conn.contentLength
+            val bis = BufferedInputStream(conn.getInputStream(), size)
+            val imgBitmap = BitmapFactory.decodeStream(bis)
+            bis.close()
+            return imgBitmap
         }
     }
 }

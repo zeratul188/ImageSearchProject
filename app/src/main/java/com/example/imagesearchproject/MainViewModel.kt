@@ -7,13 +7,13 @@ import androidx.lifecycle.ViewModel
 import com.example.imagesearchproject.add.AddActivity
 
 class MainViewModel: ViewModel() {
-    val data: MutableLiveData<String> by lazy {
+    /*val data: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
 
     init {
         data.value = "helloworld"
-    }
+    }*/
 
     fun onAddClick() {
         val intent = Intent(App.context(), AddActivity::class.java)
