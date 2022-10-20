@@ -39,6 +39,12 @@ class ImageRecyclerAdapter(
 
     override fun getItemCount(): Int = items.size
 
+    fun updateList(list: List<ImageItem>) {
+        items.clear()
+        items.addAll(list)
+        this.notifyDataSetChanged()
+    }
+
     class ViewHolder(private val binding: ItemImagesBinding): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ImageItem) {
@@ -51,7 +57,7 @@ class ImageRecyclerAdapter(
                     } catch (e: MalformedURLException) {
 
                     } catch (e: Exception) {
-                        Log.d("ImageError", "Error msg : $e")
+                        Log.d("ImageError02", "Error msg : $e")
                     }
                     imageScope.cancel()
                 }

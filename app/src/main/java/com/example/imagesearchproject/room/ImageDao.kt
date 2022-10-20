@@ -13,6 +13,9 @@ interface ImageDao {
     @Query("SELECT * FROM imageitem WHERE uid LIKE :uid")
     fun findByID(uid: Int): ImageItem
 
+    @Query("SELECT * FROM imageitem WHERE title LIKE '%' || :word || '%'")
+    fun searchData(word: String): List<ImageItem>
+
     @Insert
     fun insertAll(vararg imageItems: ImageItem)
 
