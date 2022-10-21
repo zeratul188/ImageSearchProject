@@ -21,6 +21,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             items = (dao?.getAll() as ArrayList<ImageItem>?)!!
             with(binding) {
-                imageAdapter = ImageRecyclerAdapter(items)
+                imageAdapter = ImageRecyclerAdapter(items, handler)
                 listView.adapter = imageAdapter
                 val spaceDecoration = VerticalSpaceItemDecoration(20)
                 listView.addItemDecoration(spaceDecoration)
@@ -103,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                 items.addAll(dao?.searchData(word)!!)
                 Log.d("ListInfo", "Items size : ${items.size}")
             }
-            runOnUiThread {
+            handler.post {
                 imageAdapter.notifyDataSetChanged()
             }
         }
@@ -112,10 +113,13 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         CoroutineScope(Dispatchers.IO).launch {
+            delay(500)
             items.clear()
             val list = dao?.getAll()!!
             items.addAll(list)
-            imageAdapter.notifyDataSetChanged()
+            runOnUiThread {
+                imageAdapter.notifyDataSetChanged()
+            }
         }
         /*
         handler.post(Runnable {

@@ -2,6 +2,7 @@ package com.example.imagesearchproject
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,13 +17,14 @@ import java.net.MalformedURLException
 import java.net.URL
 
 class ImageRecyclerAdapter(
-    private val items: ArrayList<ImageItem>
+    private val items: ArrayList<ImageItem>,
+    private val handler: Handler
 ): RecyclerView.Adapter<ImageRecyclerAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemImagesBinding.inflate(inflater, parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding, handler)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -45,7 +47,7 @@ class ImageRecyclerAdapter(
         this.notifyDataSetChanged()
     }
 
-    class ViewHolder(private val binding: ItemImagesBinding): RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemImagesBinding, private val handler: Handler): RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ImageItem) {
             with(binding) {
@@ -53,11 +55,21 @@ class ImageRecyclerAdapter(
                 val imageScope = CoroutineScope(Dispatchers.IO)
                 imageScope.launch {
                     try {
-                        imgView.setImageBitmap(convertedURLtoBitmap(item.url))
+                        val bitmap = convertedURLtoBitmap(item.url)
+                        handler.post {
+                            if (bitmap != null) {
+                                imgView.setImageBitmap(bitmap)
+                            } else {
+                                imgView.setImageResource(R.drawable.test_image)
+                            }
+                        }
                     } catch (e: MalformedURLException) {
-
+                        Log.d("ImageError01", "Error msg : $e")
+                        imgView.setImageResource(R.drawable.test_image)
                     } catch (e: Exception) {
-                        Log.d("ImageError02", "Error msg : $e")
+                        Log.d("ImageError02", "Error msg : ${e.stackTrace}")
+                        e.printStackTrace()
+                        imgView.setImageResource(R.drawable.test_image)
                     }
                     imageScope.cancel()
                 }
@@ -82,11 +94,14 @@ class ImageRecyclerAdapter(
             }
         }
 
-        private fun convertedURLtoBitmap(imageURL: String?): Bitmap {
+        private fun convertedURLtoBitmap(imageURL: String?): Bitmap? {
             val url = URL(imageURL)
             val conn = url.openConnection()
             conn.connect()
             val size = conn.contentLength
+            if (size <= 0) {
+                return null
+            }
             val bis = BufferedInputStream(conn.getInputStream(), size)
             val imgBitmap = BitmapFactory.decodeStream(bis)
             bis.close()
