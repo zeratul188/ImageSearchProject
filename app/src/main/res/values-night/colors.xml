@@ -11,4 +11,6 @@
     <!-- Custom colors -->
     <color name="text">#ffffff</color>
     <color name="sub_text">#aaaaaa</color>
+    <color name="background">#333333</color>
+    <color name="stroke">#aaaaaa</color>
 </resources>

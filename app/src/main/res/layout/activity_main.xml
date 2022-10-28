@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/edtSearch"
-                android:hint="검색할 단어 입력"
+                android:hint="검색할 내용을 입력해주세요."
                 android:textSize="14sp"/>
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
